@@ -4,35 +4,41 @@ Small PHP mailer class with simple validation.
 
 ### Usage
 
-    $mail = new MiniMailer();
+    require "lib/MiniMailer.php";
 
-You can specify 
+    // Has the form been submitted?
+    if($_SERVER['REQUEST_METHOD'] == "POST"):
 
-* to
-* from
-* subject
-* body
+      // Some defaults
+      $options = array("to" => "info@polarblau.com");
+      
+      $mail = new MiniMailer($options);
+      
+      // Add some validation for the email addresses
+      // For now only "email" format and presence are supported
+      $mail->add_validator("to", "email");
+      $mail->add_validator("to", "presence");
+      $mail->add_validator("from", "email");
+      $mail->add_validator("to", "presence");
+      
+      // Use a POST/GET variable rather than setting a value directly
+      $mail->use_form_fields(array("from" => "email"));
+      
+      // Set subject and body
+      $mail->set_subject("A minimailer test mail");
+      $mail->set_body("Hello world!");
+      
+      // Validate and send
+      // Use $mail->validate(); to validate manually
+      $success = $mail->deliver();
+      
+      // Check if mail could be sent
+      if (!$success) {
+        // get errors
+        $errors = $mail->get_errors();
+        // get errors mapped to form fields if #use_form_fields was used
+        $form_errors = $mail->get_form_errors();
+      }
 
-either when instanciating:
-
-    $options = array("to" => "info@polarblau.com");
-    $mail = new MiniMailer($options);
+    endif;
     
-or through setters:
-
-    $mail = new MiniMailer();
-    $mail->set_subject("A minimailer test mail");
-    $mail->set_body("Hello world!");
-    
-You can also map form fields:
-
-    // given a field with the name 'email'
-    $mail->use_form_fields(array("from" => "email"));
-
-And send away:
-
-    $result = $mail->deliver();
-
-The result will either be `true` in case of successful delivery or contain an array of errors.
-
-**Check the code and demo for more details on validations and error handling.**

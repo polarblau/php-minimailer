@@ -15,10 +15,7 @@ class MiniMailer {
   private $subject            = null;
   private $body               = null;
   private $headers            = null;
-  private $validators         = array(
-    "to"   => array("email", "presence"),
-    "from" => array("email", "presence")
-  );
+  private $validators         = array();
   private $errors             = array();
   private $form_field_mapping = array();
   
@@ -87,9 +84,7 @@ class MiniMailer {
   
   public function deliver() {
     if (!$this->validate()) {
-      $errors = $this->errors;
-      $errors['form_fields'] = $this->map_errors_to_form_fields();
-      return $errors;
+      return false;
     } else {
       $this->add_header('From: '.$this->from."\r\n");
       $this->add_header('Reply-To: '.$this->from."\r\n");
@@ -98,6 +93,22 @@ class MiniMailer {
       return mail($this->to, $this->subject, $this->body, $this->headers);
     }
   }
+  
+  public function get_errors() {
+    return $this->errors;
+  }
+  
+  public function get_form_errors() {
+    $form_field_errors = array();
+    foreach ($this->form_field_mapping as $field => $form_field) {
+      if (count($this->errors[$field]) > 0) {
+        $form_field_errors[$form_field] = $this->errors[$field];
+      }
+    }
+    return $form_field_errors;
+  }
+  
+  // PRIVATE 
   
   private function validate_presence($field){
     if (!isset($field) || strlen($field) <= 0) {
@@ -140,15 +151,5 @@ class MiniMailer {
     return $is_valid ? null : "invalid email address";
   }
   
-  private function map_errors_to_form_fields() {
-    $form_field_errors = array();
-    foreach ($this->form_field_mapping as $field => $form_field) {
-      if (count($this->errors[$field]) > 0) {
-        $form_field_errors[$form_field] = $this->errors[$field];
-      }
-    }
-    return $form_field_errors;
-  }
-
 }
 ?>
