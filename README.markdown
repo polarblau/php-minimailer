@@ -20,7 +20,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"):
   $mail->add_validator("to", "email");
   $mail->add_validator("to", "presence");
   $mail->add_validator("from", "email");
-  $mail->add_validator("to", "presence");
+  $mail->add_validator("from", "presence");
   
   // Use a POST/GET variable rather than setting a value directly
   $mail->use_form_fields(array("from" => "email"));
