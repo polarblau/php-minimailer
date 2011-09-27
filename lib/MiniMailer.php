@@ -4,6 +4,9 @@
  *
  * Very simple mailer for PHP.
  *
+ * Dual licensed under the MIT (MIT-LICENSE.txt)
+ * and GPL (GPL-LICENSE.txt) licenses.
+ *
  * @author Florian Plank, Polarblau
  * @version 1.0
  */
