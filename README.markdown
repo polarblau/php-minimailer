@@ -5,6 +5,8 @@ Small PHP mailer class with simple validation.
 ### Usage
 
 ```php
+<?php
+
 require "lib/MiniMailer.php";
 
 // Has the form been submitted?
@@ -42,4 +44,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST"):
   }
 
 endif;
+
+?>
 ```
