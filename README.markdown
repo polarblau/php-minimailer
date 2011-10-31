@@ -13,7 +13,7 @@ require "lib/MiniMailer.php";
 if($_SERVER['REQUEST_METHOD'] == "POST"):
 
   // Some defaults
-  $options = array("to" => "info@polarblau.com");
+  $options = array("to" => "user@example.com");
   
   $mail = new MiniMailer($options);
   
