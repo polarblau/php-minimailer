@@ -8,11 +8,12 @@
  * and GPL (GPL-LICENSE.txt) licenses.
  *
  * @author Florian Plank, Polarblau
+ * @copyright 2012 Florian Plank (http://www.polarblau.com/)
  * @version 1.0
  */
- 
+
 class MiniMailer {
-                       
+
   private $to                 = null;
   private $from               = null;
   private $subject            = null;
@@ -21,15 +22,15 @@ class MiniMailer {
   private $validators         = array();
   private $errors             = array();
   private $form_field_mapping = array();
-  
-  
+
+
   function __construct($fields = array()) {
     foreach ($fields as $key => $value) {
       $setter = "set_" . $key;
       $this->$setter($value);
     }
   }
-  
+
   public function use_form_fields($fields = array()) {
     if (isset($_REQUEST)) {
       foreach ($fields as $key => $value) {
@@ -39,27 +40,27 @@ class MiniMailer {
     }
     $this->form_field_mapping = $fields;
   }
-  
+
   public function set_to($to) {
     $this->to = $to;
   }
-  
+
   public function set_from($from) {
     $this->from = $from;
   }
-  
+
   public function set_subject($subject) {
     $this->subject = $subject;
   }
-  
+
   public function set_body($body) {
     $this->body = $body;
   }
-  
+
   public function add_header($header) {
     $this->headers .= $header;
   }
-  
+
   public function add_validator($field, $validation) {
     if (!isset($this->validators[$field])) {
       $this->validators[$field] = array($validation);
@@ -67,7 +68,7 @@ class MiniMailer {
       array_push($this->validators[$field], $validation);
     }
   }
-  
+
   public function validate() {
     $this->errors = array();
     foreach ($this->validators as $field => $validators) {
@@ -84,7 +85,7 @@ class MiniMailer {
     }
     return count($this->errors) == 0;
   }
-  
+
   public function deliver() {
     if (!$this->validate()) {
       return false;
@@ -96,11 +97,11 @@ class MiniMailer {
       return mail($this->to, $this->subject, $this->body, $this->headers);
     }
   }
-  
+
   public function get_errors() {
     return $this->errors;
   }
-  
+
   public function get_form_errors() {
     $form_field_errors = array();
     foreach ($this->form_field_mapping as $field => $form_field) {
@@ -110,9 +111,9 @@ class MiniMailer {
     }
     return $form_field_errors;
   }
-  
-  // PRIVATE 
-  
+
+  // PRIVATE
+
   private function validate_presence($field){
     if (!isset($field) || strlen($field) <= 0) {
       return "missing";
@@ -153,6 +154,6 @@ class MiniMailer {
     }
     return $is_valid ? null : "invalid email address";
   }
-  
+
 }
 ?>
